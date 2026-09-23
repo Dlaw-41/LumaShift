@@ -16,7 +16,8 @@ const observer = new IntersectionObserver((entries) => entries.forEach((entry) =
 document.querySelectorAll('.reveal').forEach((element, index) => { element.style.transitionDelay = `${Math.min((index % 3) * 90, 180)}ms`; observer.observe(element); });
 
 async function submitSurvey(payload) {
-  const response = await fetch('https://tuybiqvthzoguctujzmh.supabase.co/rest/v1/lighting_survey_responses', {
+  const table = payload.branch === 'yes' ? 'light_sensitivity_yes_responses' : 'light_sensitivity_no_responses';
+  const response = await fetch(`https://tuybiqvthzoguctujzmh.supabase.co/rest/v1/${table}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -25,16 +26,13 @@ async function submitSurvey(payload) {
       Authorization: 'Bearer sb_publishable_27vGI5yravudmlJw8vhv-w_uMGLEVdY',
       Prefer: 'return=minimal',
     },
-    body: JSON.stringify({
-      sensitivity_branch: payload.branch,
-      bother_frequency: payload.branch === 'yes' ? payload.botherFrequency : null,
-      last_incident: payload.branch === 'yes' ? payload.lastIncident || null : null,
-      actions_taken: payload.branch === 'yes' ? payload.actionsTaken : [],
-      spending_details: payload.branch === 'yes' ? payload.spendingDetails || null : null,
-      adjustment_details: payload.branch === 'no' ? payload.adjustmentDetails || null : null,
-      work_environment: payload.workEnvironment,
-      email: payload.email || null,
-      source: 'website',
+    body: JSON.stringify(payload.branch === 'yes' ? {
+      bother_frequency: payload.botherFrequency, last_incident: payload.lastIncident || null,
+      actions_taken: payload.actionsTaken, spending_details: payload.spendingDetails || null,
+      work_environment: payload.workEnvironment, email: payload.email || null,
+    } : {
+      adjustment_details: payload.adjustmentDetails || null,
+      work_environment: payload.workEnvironment, email: payload.email || null,
     }),
   });
   const result = await response.json().catch(() => ({}));
