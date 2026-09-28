@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "LumaShift — Light where you want it",
+  title: "LumaShift — Light, redirected.",
   description:
-    "LumaShift redirects harsh overhead light onto the walls—no rewiring, electrician, or landlord approval.",
+    "Light that goes where you want it and stays out of your eyes.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
